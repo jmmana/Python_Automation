@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from datetime import datetime
+import pandas as pd
 
 # Configuración del logging
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
@@ -24,6 +24,7 @@ from Scripts.close_browser import close_browser
 from Scripts.login_browser import login
 from Scripts.datascraping_browser import scrape_work_items
 from Scripts.processdata_browser import save_to_csv
+from Scripts.process_items import process_items
 
 def main():
     """
@@ -32,14 +33,11 @@ def main():
     try:
         logger.info("Starting the automation script")
         
-        # URL de login y de trabajo
         login_url = "https://acme-test.uipath.com/login"
         work_items_url = "https://acme-test.uipath.com/work-items"
-        
-        # Nombre del navegador a usar
+        process_base_url = "https://acme-test.uipath.com/work-items/update"
         browser_name = "chrome"
         
-        # Llamar a la función open_browser con la URL de login y el nombre del navegador
         driver = open_browser(login_url, browser_name)
 
         # Credenciales de login
@@ -55,6 +53,10 @@ def main():
         # Guardar los datos en un archivo CSV en el directorio Data
         output_directory = "Data"
         save_to_csv(df, output_directory)
+
+        # Procesar cada elemento de trabajo
+        work_items = df.to_dict(orient="records")
+        process_items(driver, process_base_url, work_items)
 
         # Cerrar el navegador
         close_browser(driver)
