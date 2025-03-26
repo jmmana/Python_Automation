@@ -1,0 +1,4 @@
+2025-03-26 08:58:59,925 - __main__ - INFO - Starting the automation script
+2025-03-26 08:58:59,926 - Scripts.open_browser - INFO - Attempting to open URL: https://www.example.com
+2025-03-26 08:58:59,987 - Scripts.open_browser - INFO - Successfully opened URL: https://www.example.com
+2025-03-26 08:58:59,988 - __main__ - INFO - Automation script completed successfully
