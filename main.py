@@ -1,25 +1,13 @@
 import logging
 import os
 import sys
+from datetime import datetime
 
 # Configuración del logging
-# Definir el directorio donde se guardarán los archivos de log.
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
-# Crear el directorio de logs si no existe.
 os.makedirs(log_dir, exist_ok=True)
-# Definir el archivo de log.
 log_file = os.path.join(log_dir, 'automation.log')
 
-# Configurar el logging básico.
-# - level: Nivel de logging (DEBUG, INFO, WARNING, ERROR, CRITICAL).
-# - format: Formato de los mensajes de log.
-#   - %(asctime)s: Fecha y hora del log.
-#   - %(name)-30s: Nombre del logger, ajustado a 30 caracteres.
-#   - %(levelname)-8s: Nivel del log, ajustado a 8 caracteres.
-#   - %(message)s: Mensaje del log.
-# - handlers: Destinos de los mensajes de log.
-#   - FileHandler: Guarda los logs en un archivo.
-#   - StreamHandler: Muestra los logs en la consola.
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(name)-45s - %(levelname)-8s - %(message)s',
@@ -29,14 +17,13 @@ logging.basicConfig(
     ]
 )
 
-# Crear un logger con el nombre del módulo actual.
 logger = logging.getLogger(__name__)
 
-# Importar la función open_browser desde el módulo scripts.open_browser.
 from Scripts.open_browser import open_browser
 from Scripts.close_browser import close_browser
 from Scripts.login_browser import login
-
+from Scripts.datascraping_browser import scrape_work_items
+from Scripts.processdata_browser import save_to_csv
 
 def main():
     """
@@ -45,14 +32,15 @@ def main():
     try:
         logger.info("Starting the automation script")
         
-        # URL a abrir
-        url = "https://acme-test.uipath.com/login"
+        # URL de login y de trabajo
+        login_url = "https://acme-test.uipath.com/login"
+        work_items_url = "https://acme-test.uipath.com/work-items"
         
-        # Nombre del navegador a usar (por ejemplo, 'chrome' o 'firefox').
+        # Nombre del navegador a usar
         browser_name = "chrome"
         
-        # Llamar a la función open_browser con la URL y el nombre del navegador.  
-        driver = open_browser(url, browser_name)
+        # Llamar a la función open_browser con la URL de login y el nombre del navegador
+        driver = open_browser(login_url, browser_name)
 
         # Credenciales de login
         username = "jmmana@gmail.com"
@@ -61,14 +49,19 @@ def main():
         # Llamar a la función de login
         login(driver, username, password)
 
+        # Llamar a la función de scraping
+        df = scrape_work_items(driver, work_items_url)
+
+        # Guardar los datos en un archivo CSV en el directorio Data
+        output_directory = "Data"
+        save_to_csv(df, output_directory)
+
         # Cerrar el navegador
         close_browser(driver)
-
 
         logger.info("Automation script completed successfully")
     except Exception as e:
         logger.error("An error occurred in the main script", exc_info=True)
 
-# Si el script se ejecuta directamente (no importado como módulo), llamar a la función main.
 if __name__ == "__main__":
     main()
