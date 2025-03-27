@@ -3,25 +3,24 @@ import os
 import sys
 import pandas as pd
 import sqlite3
-
 from datetime import datetime
 from selenium import webdriver
-from dotenv import load_dotenv
 from Scripts.open_browser import open_browser
 from Scripts.close_browser import close_browser
 from Scripts.login_browser import login
 from Scripts.process_items import process_items
 from Scripts.update_status import update_execution_status  # Importar la función
+from Scripts.config_environment import load_environment  # Importar la función de configuración del entorno
 
-# Cargar las variables de entorno desde el archivo .env
-load_dotenv()
+# Cargar las variables de entorno
+env_vars = load_environment()
 
-# Acceder a las variables de entorno
-login_url = os.getenv('LOGIN_URL')
-process_base_url = os.getenv('PROCESS_BASE_URL')
-browser_name = os.getenv('BROWSER_NAME')
-username = os.getenv('USERNAME')
-password = os.getenv('PASSWORD')
+# Acceder a las variables de entorno desde el diccionario
+login_url = env_vars['LOGIN_URL']
+process_base_url = env_vars['PROCESS_BASE_URL']
+browser_name = env_vars['BROWSER_NAME']
+username = env_vars['WEB_USERNAME']
+password = env_vars['WEB_PASSWORD']
 
 # Configuración del logging
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
@@ -30,7 +29,7 @@ log_file = os.path.join(log_dir, 'automation.log')
 
 logging.basicConfig(
     level=logging.DEBUG,
-    format='%(asctime)s - %(name)-45s - %(levelname)-8s - %(message)s',
+    format='%(asctime)s - %(name)-45s - %(levellevel)-8s - %(message)s',
     handlers=[
         logging.FileHandler(log_file),
         logging.StreamHandler(sys.stdout)

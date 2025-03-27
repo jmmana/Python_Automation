@@ -4,19 +4,21 @@ import sys
 import pandas as pd
 import sqlite3
 from datetime import datetime
-from dotenv import load_dotenv
+from Scripts.processdata_browser import update_execution_status  # Importar la función
+from Scripts.send_email import send_email  # Importar la función
+from Scripts.config_environment import load_environment  # Importar la función de configuración del entorno
 
-# Cargar las variables de entorno desde el archivo .env
-load_dotenv()
+# Cargar las variables de entorno
+env_vars = load_environment()
 
-# Acceder a las variables de entorno
-db_file = os.getenv('DB_FILE', 'Data/PythonAutomation.db')
-table_name = os.getenv('TABLE_NAME', 'ACME_Systems')
-to_emails = os.getenv('TO_EMAILS').split(',')
-smtp_server = os.getenv('SMTP_SERVER')
-smtp_port = int(os.getenv('SMTP_PORT'))
-smtp_user = os.getenv('SMTP_USER')
-smtp_password = os.getenv('SMTP_PASSWORD')
+# Acceder a las variables de entorno desde el diccionario
+db_file = env_vars['DB_FILE']
+table_name = env_vars['TABLE_NAME']
+to_emails = env_vars['TO_EMAILS']
+smtp_server = env_vars['SMTP_SERVER']
+smtp_port = env_vars['SMTP_PORT']
+smtp_user = env_vars['SMTP_USER']
+smtp_password = env_vars['SMTP_PASSWORD']
 
 # Configuración del logging
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
@@ -33,9 +35,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
-from Scripts.processdata_browser import update_execution_status  # Importar la función
-from Scripts.send_email import send_email  # Importar la función
 
 def read_from_sqlite(db_file, table_name):
     """

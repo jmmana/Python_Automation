@@ -2,17 +2,20 @@ import logging
 import os
 import sys
 import pandas as pd
-from dotenv import load_dotenv
+from Scripts.config_environment import load_environment  # Importar la función de configuración del entorno
 
-# Cargar las variables de entorno desde el archivo .env
-load_dotenv()
+# Cargar las variables de entorno
+env_vars = load_environment()
 
-# Acceder a las variables de entorno
-login_url = os.getenv('LOGIN_URL')
-work_items_url = os.getenv('WORK_ITEMS_URL')
-browser_name = os.getenv('BROWSER_NAME')
-username = os.getenv('USERNAME')
-password = os.getenv('PASSWORD')
+# Acceder a las variables de entorno desde el diccionario
+db_file = env_vars['DB_FILE']
+table_name = env_vars['TABLE_NAME']
+login_url = env_vars['LOGIN_URL']
+work_items_url = env_vars['WORK_ITEMS_URL']
+process_base_url = env_vars['PROCESS_BASE_URL']
+browser_name = env_vars['BROWSER_NAME']
+username = env_vars['WEB_USERNAME']
+password = env_vars['WEB_PASSWORD']
 
 # Configuración del logging
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
@@ -57,8 +60,6 @@ def main():
         save_to_csv(df, output_directory)
 
         # Guardar los datos en la base de datos SQLite
-        db_file = "Data/PythonAutomation.db"  # Especifica la ruta al archivo de la base de datos
-        table_name = "ACME_Systems"  # Nombre de la tabla
         save_to_sqlite(df, db_file, table_name)
         
         # Cerrar el navegador
