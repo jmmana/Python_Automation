@@ -1,0 +1,15 @@
+LOGIN_URL=https://acme-test.uipath.com/login
+WORK_ITEMS_URL=https://acme-test.uipath.com/work-items
+PROCESS_BASE_URL=https://acme-test.uipath.com/work-items/update
+
+BROWSER_NAME=chrome
+USERNAME=jmmana@gmail.com
+PASSWORD=XXXXXXXXXXXXXXXXXX
+
+TO_EMAILS=jmmana@gmail.com
+SMTP_SERVER=smtp.mailersend.net
+SMTP_PORT=587
+SMTP_USER=XXXXXXXXXXXXX.mlsender.net
+SMTP_PASSWORD=xxxxxxxxxxxxxxxxxxxxxxxx
+
+# https://app.mailersend.com/
