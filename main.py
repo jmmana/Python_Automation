@@ -24,6 +24,7 @@ from Scripts.close_browser import close_browser
 from Scripts.login_browser import login
 from Scripts.datascraping_browser import scrape_work_items
 from Scripts.processdata_browser import save_to_csv
+from Scripts.processdata_browser import save_to_sqlite
 from Scripts.process_items import process_items
 
 def main():
@@ -54,6 +55,11 @@ def main():
         output_directory = "Data"
         save_to_csv(df, output_directory)
 
+        # Guardar los datos en la base de datos SQLite
+        db_file = "Data/PythonAutomation.db"  # Especifica la ruta al archivo de la base de datos
+        table_name = "ACME_Systems"  # Nombre de la tabla
+        save_to_sqlite(df, db_file, table_name)
+        
         # Procesar cada elemento de trabajo
         work_items = df.to_dict(orient="records")
         process_items(driver, process_base_url, work_items)
