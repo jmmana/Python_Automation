@@ -1,46 +1,61 @@
-Automatización de Login en ACME System 1
+
+# Automatización de Login en ACME System 1
+
 Esta sección describe cómo automatizamos el proceso de login en el sitio web de ACME System 1 utilizando Selenium en Python. A continuación, se muestra una imagen de la página de login y se explican los campos que llenaremos, los selectores que usaremos y cómo conseguimos estos selectores.
 
 ![image](https://github.com/user-attachments/assets/a602d63b-ffb9-4d76-a6df-c46b6e757aae)
 
-Campos a Llenar
-Email: Campo de entrada para el correo electrónico del usuario.
-Password: Campo de entrada para la contraseña del usuario.
-Login Button: Botón para enviar el formulario de login.
-Selectores Utilizados
+## Campos a Llenar
+
+1. **Email**: Campo de entrada para el correo electrónico del usuario.
+2. **Password**: Campo de entrada para la contraseña del usuario.
+3. **Login Button**: Botón para enviar el formulario de login.
+
+## Selectores Utilizados
+
 Para automatizar el proceso de login, utilizamos los siguientes selectores:
 
-Email Field:
+1. **Email Field**:
+   - **Selector**: `#email`
+   - **Descripción**: Este selector se utiliza para identificar el campo de entrada del correo electrónico.
+   - **Código**:
+     ```python
+     email_field = driver.find_element(By.CSS_SELECTOR, "#email")
+     email_field.send_keys("your_email@example.com")
+     ```
 
-Selector: #email
-Descripción: Este selector se utiliza para identificar el campo de entrada del correo electrónico.
-Código:
-email_field = driver.find_element(By.CSS_SELECTOR, "#email")
-email_field.send_keys("your_email@example.com")
-Password Field:
+2. **Password Field**:
+   - **Selector**: `#password`
+   - **Descripción**: Este selector se utiliza para identificar el campo de entrada de la contraseña.
+   - **Código**:
+     ```python
+     password_field = driver.find_element(By.CSS_SELECTOR, "#password")
+     password_field.send_keys("your_password")
+     ```
 
-Selector: #password
-Descripción: Este selector se utiliza para identificar el campo de entrada de la contraseña.
-Código:
-password_field = driver.find_element(By.CSS_SELECTOR, "#password")
-password_field.send_keys("your_password")
-Login Button:
+3. **Login Button**:
+   - **Selector**: `.btn-primary`
+   - **Descripción**: Este selector se utiliza para identificar el botón de login.
+   - **Código**:
+     ```python
+     login_button = driver.find_element(By.CSS_SELECTOR, ".btn-primary")
+     login_button.click()
+     ```
 
-Selector: .btn-primary
-Descripción: Este selector se utiliza para identificar el botón de login.
-Código:
-login_button = driver.find_element(By.CSS_SELECTOR, ".btn-primary")
-login_button.click()
-Cómo Conseguimos los Selectores
+## Cómo Conseguimos los Selectores
+
 Para obtener los selectores de los elementos en la página de login, seguimos estos pasos:
 
-Abrir la página de login: Navegamos a la URL de la página de login en un navegador web.
-Inspeccionar el elemento: Hacemos clic derecho sobre el elemento que queremos automatizar (por ejemplo, el campo de email) y seleccionamos "Inspeccionar" en el menú contextual. Esto abrirá las herramientas de desarrollo del navegador.
-Copiar el selector: En las herramientas de desarrollo, localizamos el elemento en el código HTML. Hacemos clic derecho sobre el código del elemento y seleccionamos "Copiar" > "Copiar selector" para obtener el selector CSS del elemento.
-Verificar el selector: Pegamos el selector en nuestro script de automatización y verificamos que selecciona correctamente el elemento deseado.
-Ejemplo de Código Completo
+1. **Abrir la página de login**: Navegamos a la URL de la página de login en un navegador web.
+2. **Inspeccionar el elemento**: Hacemos clic derecho sobre el elemento que queremos automatizar (por ejemplo, el campo de email) y seleccionamos "Inspeccionar" en el menú contextual. Esto abrirá las herramientas de desarrollo del navegador.
+3. **Copiar el selector**: En las herramientas de desarrollo, localizamos el elemento en el código HTML. Hacemos clic derecho sobre el código del elemento y seleccionamos "Copiar" > "Copiar selector" para obtener el selector CSS del elemento.
+4. **Verificar el selector**: Pegamos el selector en nuestro script de automatización y verificamos que selecciona correctamente el elemento deseado.
+
+## Ejemplo de Código Completo
+
 A continuación se muestra un ejemplo de código completo para automatizar el login en la página de ACME System 1:
 
+```python
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import logging
@@ -82,6 +97,5 @@ if __name__ == "__main__":
     driver.get("https://acme-test.uipath.com/login")
     login(driver, "your_email@example.com", "your_password")
     driver.quit()
-Este script abrirá el navegador, navegará a la URL de la página de login, ingresará el correo electrónico y la contraseña, y hará clic en el botón de login.
 
 
