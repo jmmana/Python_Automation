@@ -4,13 +4,6 @@ import os
 import sqlite3
 from datetime import datetime
 
-# Configurar el logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    handlers=[
-                        logging.FileHandler("processdata_browser.log"),
-                        logging.StreamHandler()
-                    ])
 
 logger = logging.getLogger(__name__)
 
@@ -53,9 +46,10 @@ def save_to_sqlite(df, db_file, table_name):
         conn = sqlite3.connect(db_file)
         cursor = conn.cursor()
 
-        # Crear la tabla si no existe
+        # Crear la tabla si no existe, incluyendo las columnas adicionales
         columns = ", ".join([f"{col} TEXT" for col in df.columns])
-        create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY AUTOINCREMENT, {columns})"
+        additional_columns = "CreatedDate TEXT, ChangeDate TEXT, ErrorReason TEXT, ExecutionStatus TEXT"
+        create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} (id INTEGER PRIMARY KEY AUTOINCREMENT, {columns}, {additional_columns})"
         logger.debug(f"Creando tabla con la consulta: {create_table_query}")
         cursor.execute(create_table_query)
 
@@ -65,9 +59,9 @@ def save_to_sqlite(df, db_file, table_name):
             cursor.execute(f"SELECT 1 FROM {table_name} WHERE WIID = ?", (wiid,))
             if cursor.fetchone() is None:
                 placeholders = ", ".join(["?"] * len(row))
-                insert_query = f"INSERT INTO {table_name} ({', '.join(df.columns)}) VALUES ({placeholders})"
-                logger.debug(f"Insertando fila con la consulta: {insert_query}, Valores: {tuple(row)}")
-                cursor.execute(insert_query, tuple(row))
+                insert_query = f"INSERT INTO {table_name} ({', '.join(df.columns)}, CreatedDate, ChangeDate, ErrorReason, ExecutionStatus) VALUES ({placeholders}, ?, ?, ?, ?)"
+                logger.debug(f"Insertando fila con la consulta: {insert_query}, Valores: {tuple(row) + (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '', 'Ready For Performer')}")
+                cursor.execute(insert_query, tuple(row) + (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '', 'Ready For Performer'))
             else:
                 logger.debug(f"El registro con WIID {wiid} ya existe en la tabla {table_name}")
 
@@ -79,6 +73,28 @@ def save_to_sqlite(df, db_file, table_name):
     finally:
         # Cerrar la conexión a la base de datos
         conn.close()
+
+def update_execution_status(db_file, table_name, wiid, status):
+    """
+    Actualiza el estado de ejecución de un registro en la base de datos SQLite.
+
+    Args:
+        db_file (str): El archivo de la base de datos SQLite.
+        table_name (str): El nombre de la tabla a actualizar.
+        wiid (str): El identificador único del registro.
+        status (str): El nuevo estado de ejecución.
+    """
+    try:
+        logger.debug(f"Actualizando estado de ejecución en la base de datos SQLite. Archivo: {db_file}, Tabla: {table_name}, WIID: {wiid}, Estado: {status}")
+        conn = sqlite3.connect(db_file)
+        cursor = conn.cursor()
+        update_query = f"UPDATE {table_name} SET ExecutionStatus = ?, ChangeDate = ? WHERE WIID = ?"
+        cursor.execute(update_query, (status, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), wiid))
+        conn.commit()
+        conn.close()
+        logger.debug(f"Estado de ejecución actualizado para WIID {wiid} a {status}")
+    except Exception as e:
+        logger.error(f"Failed to update execution status for WIID {wiid} in SQLite database {db_file}", exc_info=True)
 
 if __name__ == "__main__":
     import sys
