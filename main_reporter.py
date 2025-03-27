@@ -4,6 +4,19 @@ import sys
 import pandas as pd
 import sqlite3
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv()
+
+# Acceder a las variables de entorno
+db_file = os.getenv('DB_FILE', 'Data/PythonAutomation.db')
+table_name = os.getenv('TABLE_NAME', 'ACME_Systems')
+to_emails = os.getenv('TO_EMAILS').split(',')
+smtp_server = os.getenv('SMTP_SERVER')
+smtp_port = int(os.getenv('SMTP_PORT'))
+smtp_user = os.getenv('SMTP_USER')
+smtp_password = os.getenv('SMTP_PASSWORD')
 
 # Configuración del logging
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
@@ -55,8 +68,6 @@ def main():
         logger.info("Starting the Reporter automation script")
         
         # Leer los datos de la base de datos SQLite
-        db_file = "Data/PythonAutomation.db"  # Especifica la ruta al archivo de la base de datos
-        table_name = "ACME_Systems"  # Nombre de la tabla
         df = read_from_sqlite(db_file, table_name)
 
         # Crear un archivo CSV con los datos leídos
@@ -71,11 +82,6 @@ def main():
         # Enviar el archivo CSV por correo
         subject = "Reporte de Ejecución"
         body = "Adjunto encontrará el reporte de ejecución."
-        to_emails = ["jmmana@gmail.com"]
-        smtp_server = "smtp.mailersend.net"
-        smtp_port = 587
-        smtp_user = "MS_wcwEn7@trial-2p0347z5277lzdrn.mlsender.net"
-        smtp_password = "mssp.KsiQbTu.0p7kx4xqzyvg9yjr.As5HCFp"
 
         if send_email(subject, body, to_emails, csv_filepath, smtp_server, smtp_port, smtp_user, smtp_password):
             # Actualizar el estado de ejecución de los registros a "Reported"

@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 import logging
-import os  # Importar la biblioteca os
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -55,15 +55,3 @@ def send_email(subject, body, to_emails, attachment_path, smtp_server, smtp_port
     except Exception as e:
         logger.error(f"Failed to send email to {to_emails} with the attachment {attachment_path}", exc_info=True)
         return False
-
-if __name__ == "__main__":
-    subject = "Test Email"
-    body = "This is a test email."
-    to_emails = ["recipient@example.com"]
-    attachment_path = "path/to/attachment.txt"
-    smtp_server = "smtp.mailersend.net"
-    smtp_port = 587
-    smtp_user = "MS_wcwEn7@trial-2p0347z5277lzdrn.mlsender.net"
-    smtp_password = "mssp.KsiQbTu.0p7kx4xqzyvg9yjr.As5HCFp"
-
-    send_email(subject, body, to_emails, attachment_path, smtp_server, smtp_port, smtp_user, smtp_password)

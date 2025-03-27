@@ -3,8 +3,25 @@ import os
 import sys
 import pandas as pd
 import sqlite3
+
 from datetime import datetime
 from selenium import webdriver
+from dotenv import load_dotenv
+from Scripts.open_browser import open_browser
+from Scripts.close_browser import close_browser
+from Scripts.login_browser import login
+from Scripts.process_items import process_items
+from Scripts.update_status import update_execution_status  # Importar la función
+
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv()
+
+# Acceder a las variables de entorno
+login_url = os.getenv('LOGIN_URL')
+process_base_url = os.getenv('PROCESS_BASE_URL')
+browser_name = os.getenv('BROWSER_NAME')
+username = os.getenv('USERNAME')
+password = os.getenv('PASSWORD')
 
 # Configuración del logging
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
@@ -21,12 +38,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
-from Scripts.open_browser import open_browser
-from Scripts.close_browser import close_browser
-from Scripts.login_browser import login
-from Scripts.process_items import process_items
-from Scripts.update_status import update_execution_status  # Importar la función
 
 def read_from_sqlite(db_file, table_name):
     """
@@ -58,15 +69,7 @@ def main():
     try:
         logger.info("Starting the Performer automation script")
         
-        login_url = "https://acme-test.uipath.com/login"
-        process_base_url = "https://acme-test.uipath.com/work-items/update"
-        browser_name = "chrome"
-        
         driver = open_browser(login_url, browser_name)
-
-        # Credenciales de login
-        username = "jmmana@gmail.com"
-        password = "P@ssWoor!d"
 
         # Llamar a la función de login
         login(driver, username, password)

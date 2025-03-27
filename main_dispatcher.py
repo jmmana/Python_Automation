@@ -2,6 +2,17 @@ import logging
 import os
 import sys
 import pandas as pd
+from dotenv import load_dotenv
+
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv()
+
+# Acceder a las variables de entorno
+login_url = os.getenv('LOGIN_URL')
+work_items_url = os.getenv('WORK_ITEMS_URL')
+browser_name = os.getenv('BROWSER_NAME')
+username = os.getenv('USERNAME')
+password = os.getenv('PASSWORD')
 
 # Configuración del logging
 log_dir = os.path.join(os.path.dirname(__file__), 'logs')
@@ -26,7 +37,6 @@ from Scripts.datascraping_browser import scrape_work_items
 from Scripts.processdata_browser import save_to_csv
 from Scripts.processdata_browser import save_to_sqlite
 
-
 def main():
     """
     Función principal que inicia el script de automatización.
@@ -34,15 +44,7 @@ def main():
     try:
         logger.info("Starting the automation script")
         
-        login_url = "https://acme-test.uipath.com/login"
-        work_items_url = "https://acme-test.uipath.com/work-items"      
-        browser_name = "chrome"
-        
         driver = open_browser(login_url, browser_name)
-
-        # Credenciales de login
-        username = "jmmana@gmail.com"
-        password = "P@ssWoor!d"
 
         # Llamar a la función de login
         login(driver, username, password)
