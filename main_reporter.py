@@ -7,6 +7,7 @@ from datetime import datetime
 from Scripts.processdata_browser import update_execution_status  # Importar la función
 from Scripts.send_email import send_email  # Importar la función
 from Scripts.config_environment import load_environment  # Importar la función de configuración del entorno
+from Scripts.config_log import logger
 
 # Cargar las variables de entorno
 env_vars = load_environment()
@@ -19,22 +20,6 @@ smtp_server = env_vars['SMTP_SERVER']
 smtp_port = env_vars['SMTP_PORT']
 smtp_user = env_vars['SMTP_USER']
 smtp_password = env_vars['SMTP_PASSWORD']
-
-# Configuración del logging
-log_dir = os.path.join(os.path.dirname(__file__), 'logs')
-os.makedirs(log_dir, exist_ok=True)
-log_file = os.path.join(log_dir, 'automation.log')
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(name)-45s - %(levelname)-8s - %(message)s',
-    handlers=[
-        logging.FileHandler(log_file),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
-
-logger = logging.getLogger(__name__)
 
 def read_from_sqlite(db_file, table_name):
     """

@@ -11,6 +11,7 @@ from Scripts.login_browser import login
 from Scripts.process_items import process_items
 from Scripts.update_status import update_execution_status  # Importar la función
 from Scripts.config_environment import load_environment  # Importar la función de configuración del entorno
+from Scripts.config_log import logger
 
 # Cargar las variables de entorno
 env_vars = load_environment()
@@ -22,21 +23,6 @@ browser_name = env_vars['BROWSER_NAME']
 username = env_vars['WEB_USERNAME']
 password = env_vars['WEB_PASSWORD']
 
-# Configuración del logging
-log_dir = os.path.join(os.path.dirname(__file__), 'logs')
-os.makedirs(log_dir, exist_ok=True)
-log_file = os.path.join(log_dir, 'automation.log')
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(name)-45s - %(levellevel)-8s - %(message)s',
-    handlers=[
-        logging.FileHandler(log_file),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
-
-logger = logging.getLogger(__name__)
 
 def read_from_sqlite(db_file, table_name):
     """

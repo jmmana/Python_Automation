@@ -2,7 +2,15 @@ import logging
 import os
 import sys
 import pandas as pd
+
 from Scripts.config_environment import load_environment  # Importar la función de configuración del entorno
+from Scripts.open_browser import open_browser
+from Scripts.close_browser import close_browser
+from Scripts.login_browser import login
+from Scripts.datascraping_browser import scrape_work_items
+from Scripts.processdata_browser import save_to_csv
+from Scripts.processdata_browser import save_to_sqlite
+from Scripts.config_log import logger
 
 # Cargar las variables de entorno
 env_vars = load_environment()
@@ -17,28 +25,8 @@ browser_name = env_vars['BROWSER_NAME']
 username = env_vars['WEB_USERNAME']
 password = env_vars['WEB_PASSWORD']
 
-# Configuración del logging
-log_dir = os.path.join(os.path.dirname(__file__), 'logs')
-os.makedirs(log_dir, exist_ok=True)
-log_file = os.path.join(log_dir, 'automation.log')
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(name)-45s - %(levelname)-8s - %(message)s',
-    handlers=[
-        logging.FileHandler(log_file),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
 
-logger = logging.getLogger(__name__)
-
-from Scripts.open_browser import open_browser
-from Scripts.close_browser import close_browser
-from Scripts.login_browser import login
-from Scripts.datascraping_browser import scrape_work_items
-from Scripts.processdata_browser import save_to_csv
-from Scripts.processdata_browser import save_to_sqlite
 
 def main():
     """
