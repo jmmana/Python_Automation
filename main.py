@@ -4,10 +4,12 @@ from Scripts.config_log import logger  # Importa el logger configurado
 
 def run_script(script_name):
     try:
-        subprocess.run(['python', f'Scripts/{script_name}'], check=True)
+        # Ejecuta el script y espera a que termine
+        subprocess.run(['python', script_name], check=True)
         logger.info(f'{script_name} ejecutado correctamente.')
     except subprocess.CalledProcessError as e:
         logger.error(f'Error al ejecutar {script_name}: {e}')
+        raise  # Vuelve a lanzar la excepción para detener la ejecución si hay un error
 
 def main():
     scripts = [
