@@ -55,7 +55,7 @@ def main():
         df = read_from_sqlite(db_file, table_name)
 
         # Crear un archivo CSV con los datos leídos
-        output_directory = "Data"
+        output_directory = "Temp"
         os.makedirs(output_directory, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         csv_filename = f"Report_{timestamp}.csv"

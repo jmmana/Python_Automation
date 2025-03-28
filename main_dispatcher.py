@@ -44,7 +44,7 @@ def main():
         df = scrape_work_items(driver, work_items_url)
 
         # Guardar los datos en un archivo CSV en el directorio Data
-        output_directory = "Data"
+        output_directory = "Temp"
         save_to_csv(df, output_directory)
 
         # Guardar los datos en la base de datos SQLite
